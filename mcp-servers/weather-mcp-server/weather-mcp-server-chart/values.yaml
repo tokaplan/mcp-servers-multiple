@@ -2,7 +2,7 @@ labels:
   app: weather-mcp-server
   version: 1.0.0
 
-namespace: 
+namespace:
 
 app:
   version: 1.0.0
@@ -22,8 +22,8 @@ spec:
     type: RollingUpdate
   pod:
     containers:
-      imageName: 
-      imagePullPolicy: IfNotPresent
+      imageName: appmonitoring.azurecr.io/python-lior:latest
+      imagePullPolicy: Always
       ports:
         containerPort: 8001
         name: http
@@ -34,4 +34,4 @@ spec:
 
 #Application environment variables
 envVariables:
-#  logLevel: INFO
+  logLevel: INFO

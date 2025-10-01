@@ -30,6 +30,29 @@ To delete release from cluster:
 helm delete mcp-server-weather -n mcp-dev
 ```
 
+## Test MCP server via raw HTTP
+Issue the following HTTP request via a tool like Fiddler or curl:
+```http
+POST http://20.39.20.127:8001/mcp/ HTTP/1.1
+User-Agent: Fiddler
+Host: 20.39.20.127:8001
+Accept: application/json, text/event-stream
+Content-Type: application/json
+Content-Length: 159
+
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "get_alerts",
+    "arguments": {
+      "state": "WA"
+    }
+  }
+}
+```
+
 ## Run MCP Inspector to test and debug MCP Server
 Open a new terminal window and run the following commands
 ```

@@ -12,6 +12,7 @@ metadata:
   annotations:
     version: {{ .Values.app.version }}
 spec:
+  type: LoadBalancer
   ports:
     - name: http
       targetPort: http

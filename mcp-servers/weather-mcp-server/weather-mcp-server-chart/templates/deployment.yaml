@@ -36,6 +36,7 @@ spec:
       annotations:
         version: {{ .Values.app.version }}
         kubectl.kubernetes.io/default-container: {{ .Release.Name }}
+        instrumentation.opentelemetry.io/private-preview-inject-python: "true"
     spec:
       serviceAccountName: {{ .Values.spec.pod.serviceAccountName }}
       containers:
@@ -56,22 +57,22 @@ spec:
           value: {{ .Values.envVariables.logLevel }}
         - name: ENV_NAME
           value: {{ .Values.envVariables.envName }}
-        livenessProbe:
-          exec:
-            command:
-            - sh
-            - -c
-            - |
-              response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8001/mcp)
-              if [ "$response" -eq 307 ]; then exit 0; else exit 1; fi          
-        readinessProbe:
-          exec:
-            command:
-            - sh
-            - -c
-            - |
-              response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8001/mcp)
-              if [ "$response" -eq 307 ]; then exit 0; else exit 1; fi
+        # livenessProbe:
+        #   httpGet:
+        #     path: /mcp
+        #     port: 8001
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
+        #   timeoutSeconds: 5
+        #   failureThreshold: 3          
+        # readinessProbe:
+        #   httpGet:
+        #     path: /mcp
+        #     port: 8001
+        #   initialDelaySeconds: 10
+        #   periodSeconds: 5
+        #   timeoutSeconds: 3
+        #   failureThreshold: 2
         volumeMounts: 
       volumes: 
       restartPolicy: {{ .Values.spec.pod.restartPolicy }}

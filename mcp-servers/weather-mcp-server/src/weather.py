@@ -1,6 +1,22 @@
+from logging import INFO, Formatter, getLogger, StreamHandler
 from typing import Any
 import httpx
+import opentelemetry.instrumentation.httpx
+import sys
 from mcp.server.fastmcp import FastMCP
+
+# Configure logger properly for containerized environment
+logger = getLogger("weather_mcp_server")
+logger.setLevel(INFO)
+
+# Add console handler to ensure logs go to stdout
+handler = StreamHandler(sys.stdout)
+handler.setLevel(INFO)
+formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+logger.info("Weather MCP Server starting up...")
 
 # Initialize FastMCP server
 mcp = FastMCP("weather", port=8001, host="0.0.0.0", stateless_http=True)
@@ -41,6 +57,8 @@ async def get_alerts(state: str) -> str:
     Args:
         state: Two-letter US state code (e.g. CA, NY)
     """
+    logger.info("Get alerts for: %s", state)
+
     url = f"{NWS_API_BASE}/alerts/active/area/{state}"
     data = await make_nws_request(url)
 
@@ -61,6 +79,9 @@ async def get_forecast(latitude: float, longitude: float) -> str:
         latitude: Latitude of the location
         longitude: Longitude of the location
     """
+
+    logger.info("Get forecast")
+
     # First get the forecast grid endpoint
     points_url = f"{NWS_API_BASE}/points/{latitude},{longitude}"
     points_data = await make_nws_request(points_url)
