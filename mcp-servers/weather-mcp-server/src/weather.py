@@ -1,7 +1,6 @@
 from logging import INFO, Formatter, getLogger, StreamHandler
 from typing import Any
 import httpx
-import opentelemetry.instrumentation.httpx
 import sys
 from mcp.server.fastmcp import FastMCP
 
